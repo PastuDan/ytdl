@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "electron": "^2.0.1",
+    "express": "^4.16.3",
+    "youtube-dl": "^1.12.2"
+  }
+}
