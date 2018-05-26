@@ -31,7 +31,7 @@ socket.on('signal', data => {
 function downloadVideo (url) {
   const video = youtubedl(url,
     // Optional arguments passed to youtube-dl.
-    ['--format=313'],
+    ['-f', '313/137'],
     // Additional options can be given for calling `child_process.execFile()`.
     {cwd: __dirname})
 

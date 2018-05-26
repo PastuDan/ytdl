@@ -10,11 +10,13 @@ let metadata
 
 class App extends Component {
   state = {
-    connected:       false,
-    thumbnail:       null,
-    uiState:         'initial',
-    downloadSize:    0,
-    bytesDownloaded: 0,
+    connected:        false,
+    uiState:          'initial',
+    downloadSize:     0,
+    bytesDownloaded:  0,
+    videoThumbnail:   null,
+    videoTitle:       'Loading details...',
+    videoDescription: ''
   }
 
   componentDidMount = () => {
@@ -42,13 +44,15 @@ class App extends Component {
       if (!metadata) {
         metadata = JSON.parse(data)
         this.setState({
-          thumbnail:    metadata.thumbnail,
-          downloadSize: metadata.size,
+          videoThumbnail:   metadata.thumbnail,
+          videoTitle:       metadata.title,
+          videoDescription: metadata.description,
+          downloadSize:     metadata.size,
         })
         console.log(metadata)
 
         // set up stream saver
-        this.writer = createWriteStream('download.mp4', metadata.size).getWriter();
+        this.writer = createWriteStream('download.mp4', metadata.size).getWriter()
         return
       }
 
@@ -59,7 +63,7 @@ class App extends Component {
       })
 
       if (this.state.bytesDownloaded === this.state.downloadSize) {
-        this.writer.close();
+        this.writer.close()
       }
     })
 
@@ -69,11 +73,7 @@ class App extends Component {
     let parsedUrl = null
     try {
       parsedUrl = new URL(this.searchInput.value)
-      this.setState({uiState: 'transitioning'}, () => {
-        setTimeout(() => {
-          this.setState({uiState: 'progress'})
-        }, 300)
-      })
+      this.setState({uiState: 'progress'})
       this.connectToPeer()
     } catch (e) {
       // TODO user input is a search term, so query APIs and show videos / songs related to their search
@@ -87,16 +87,30 @@ class App extends Component {
       <header className="App-header">
         <h1 className="App-title">Video Saver</h1>
         <h2>{this.state.connected ? 'Connected to electron / node peer' : 'Not Connected'}</h2>
-        <ProgressCircle uiState={this.state.uiState}
-                        percent={this.state.downloadSize ? 100 * this.state.bytesDownloaded / this.state.downloadSize : 0}
-                        thumbnail={this.state.thumbnail}/>
       </header>
-      <p className="App-intro">
-        <input className={this.state.uiState}
-               onChange={this.parseInput}
-               ref={node => this.searchInput = node}
-               placeholder={'Paste a URL or Search...'}/>
-      </p>
+      <section>
+        <div className={`App-flip-container ${this.state.uiState}`}>
+          <div className="flipper">
+            <div className="front">
+              <input className={this.state.uiState}
+                     onChange={this.parseInput}
+                     ref={node => this.searchInput = node}
+                     placeholder={'Paste a URL or Search...'}/>
+            </div>
+            <div className="back">
+              <ProgressCircle className="App-progress"
+                              uiState={this.state.uiState}
+                              percent={this.state.downloadSize ? 100 * this.state.bytesDownloaded / this.state.downloadSize : 0}
+                              thumbnail={this.state.videoThumbnail}/>
+              <div className="App-video-metadata">
+                <h3>{this.state.videoTitle}</h3>
+                <p className="App-video-metadata-description">{this.state.videoDescription}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   }
 }

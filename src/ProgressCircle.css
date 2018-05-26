@@ -1,20 +1,10 @@
-.ProgressCircle-container.progress {
-    visibility: visible;
-    opacity: 1;
-}
-
 .ProgressCircle-container {
     display: block;
     height: 200px;
     width: 200px;
-    margin: 2em auto;
     /*box-shadow: 0 0 1em black;*/
     border-radius: 100%;
     position: relative;
-
-    transition: 300ms all ease-out;
-    visibility: hidden;
-    opacity: 0;
 }
 
 .ProgressCircle-circle {
