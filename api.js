@@ -1,46 +1,63 @@
-// const fs = require('fs');
-const youtubedl = require('youtube-dl');
+const fs = require('fs')
+const youtubedl = require('youtube-dl')
+const io = require('socket.io-client')
+const Peer = require('simple-peer')
+const wrtc = require('wrtc')
 
+const socket = io('ws://localhost:8080')
 
-const express = require('express')
-const api = express()
+let peer
+socket.on('peer-connect', () => {
+  peer = new Peer({wrtc: wrtc})
+  peer.on('signal', function (data) {
+    // when we have our own ICE data, give it to the remote peer via the signaling server
+    socket.emit('signal', data)
+  })
 
-api.get('/', (req, res) => {
-  const videoUrl = req.query.url
-  const video = youtubedl(videoUrl,
-    // Optional arguments passed to youtube-dl.
-    ['--format=best'],
-    // Additional options can be given for calling `child_process.execFile()`.
-    { cwd: __dirname });
+  peer.on('connect', () => {
+    console.log('peer connected')
+  })
 
-  // Will be called when the download starts.
-  video.on('info', function(info) {
-    console.log('Download started');
-    console.log('filename: ' + info.filename);
-    console.log('size: ' + info.size);
-  });
-
-  let size = 0;
-  video.on('info', function(info) {
-    size = info.size;
-  });
-
-  let pos = 0;
-  video.on('data', function data(chunk) {
-    pos += chunk.length;
-    // `size` should not be 0 here.
-    if (size) {
-      const percent = (pos / size * 100).toFixed(2);
-      console.log(`${percent}re%`);
-    }
-  });
-
-  res.header('Content-Disposition', 'attachment; filename="video.mp4"');
-  video.pipe(res);
-
-  // res.pipe('');
+  peer.on('data', url => {
+    console.log('data: ' + url)
+    downloadVideo(url.toString())
+  })
 })
 
-const port = 3200;
-api.listen(port, () => console.log(`Example app listening on port ${port}!`))
+socket.on('signal', data => {
+  peer.signal(data)
+})
 
+function downloadVideo (url) {
+  const video = youtubedl(url,
+    // Optional arguments passed to youtube-dl.
+    ['--format=313'],
+    // Additional options can be given for calling `child_process.execFile()`.
+    {cwd: __dirname})
+
+  let size = 0
+  // Called when the download starts.
+  video.on('info', function (info) {
+    console.log('Download started')
+    console.log('filename: ' + info.filename)
+    console.log('size: ' + info.size)
+
+    size = info.size
+    peer.send(new Buffer(JSON.stringify(info)))
+  })
+
+  let pos = 0
+  video.on('data', function data (chunk) {
+    pos += chunk.length
+    // `size` should not be 0 here.
+    if (size) {
+      const percent = (pos / size * 100).toFixed(2)
+      process.stdout.cursorTo(0)
+      process.stdout.clearLine(1)
+      process.stdout.write(percent + '%')
+    }
+  })
+
+  video.pipe(peer)
+  // video.pipe(fs.createWriteStream('myvideo.mp4'))
+}

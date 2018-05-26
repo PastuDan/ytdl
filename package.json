@@ -7,6 +7,8 @@
     "react-scripts": "1.1.4",
     "simple-peer": "^9.1.2",
     "socket.io": "^2.1.1",
+    "streamsaver": "^1.0.1",
+    "wrtc": "^0.1.4",
     "youtube-dl": "^1.12.2"
   },
   "scripts": {

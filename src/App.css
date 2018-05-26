@@ -20,5 +20,45 @@ button {
 }
 
 html, body {
-  font-family: "Helvetica Neue";
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+input {
+  border: 1px solid #bbbbbb;
+}
+
+input.initial {
+  transition: 50ms all ease-in;
+  width: 300px;
+  height: 40px;
+  padding: 20px;
+  border-radius: 4px;
+  left: calc(50% - 150px);
+  top: 210px;
+  position: absolute;
+  color: #353535;
+  border-color: #bbb;
+  background: white;
+}
+
+input {
+  font-size: 20px;
+  border: 2px solid white;
+  height: 164px;
+  width: 164px;
+  border-radius: 50%;
+  position: absolute;
+  top: 161px;
+  left: calc(50% - 82px);
+  transition: 300ms all linear;
+  outline: none;
+  color: gray;
+  padding: 40px;
+  background-color: #353535;
+}
+
+input.progress {
+  transition: 300ms all ease-out;
+  opacity: 0;
+  visibility: hidden;
 }
