@@ -9,7 +9,7 @@
 
 .ProgressCircle-circle {
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 1s linear;
+    transition: stroke-dashoffset 400ms linear;
     stroke: #666;
     stroke-width: 1em;
 }

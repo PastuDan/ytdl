@@ -3,10 +3,13 @@ import './App.css'
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
 import ProgressCircle from './ProgressCircle'
-import { createWriteStream, supported, version } from 'streamsaver'
+import FileSaver from 'file-saver'
 
-const socket = io()
+const wsUrl = process.env.NODE_ENV === 'production' ? 'http://live.milliamp.io' : ''
+const socket = io(wsUrl)
+
 let metadata
+const parts = []
 
 class App extends Component {
   state = {
@@ -52,18 +55,18 @@ class App extends Component {
         console.log(metadata)
 
         // set up stream saver
-        this.writer = createWriteStream('download.mp4', metadata.size).getWriter()
         return
       }
 
-      this.writer.write(data)
+      parts.push(data)
       console.log('chunk', this.state.bytesDownloaded / this.state.downloadSize + '%', this.state.bytesDownloaded, this.state.downloadSize,)
       this.setState({
         bytesDownloaded: this.state.bytesDownloaded + data.length
       })
 
       if (this.state.bytesDownloaded === this.state.downloadSize) {
-        this.writer.close()
+        const blob = new Blob(parts, {type: 'application/octet-stream'})
+        FileSaver.saveAs(blob, 'download.mp4')
       }
     })
 
