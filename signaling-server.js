@@ -1,13 +1,6 @@
-const http = require('http');
-const express = require('express')
-const cors = require('cors')
-const app = express()
-
-const server = http.createServer(app);
-const io = require('socket.io')(server)
 const port = process.env.SIGNALING_SERVER_PORT || 80
-
-app.use(cors())
+const http = require('http').createServer().listen(port)
+const io = require('socket.io').listen(http)
 
 io.on('connection', function (socket) {
   socket.on('signal', function (message) {
@@ -23,8 +16,4 @@ io.on('connection', function (socket) {
 
     // If both sides report success, Increase client's penalty (via IP) in redis. Cap at 50 per month.
   })
-})
-
-app.listen(port, function () {
-  console.log(`WebRTC signaling server listening on port ${port}`)
 })
