@@ -5,7 +5,7 @@ import Peer from 'simple-peer'
 import ProgressCircle from './ProgressCircle'
 import FileSaver from 'file-saver'
 
-const wsUrl = process.env.NODE_ENV === 'production' ? 'http://live.milliamp.io' : ''
+const wsUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_SOCKET_URL : ''
 const socket = io(wsUrl)
 
 let metadata
