@@ -11,3 +11,7 @@ html {
 *, *:before, *:after {
     box-sizing: inherit;
 }
+
+:root {
+    --siteWidth: 800px;
+}

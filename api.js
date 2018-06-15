@@ -6,6 +6,10 @@ const wrtc = require('wrtc')
 
 const socket = io('ws://localhost:8080')
 
+socket.on('connect', function (data) {
+  socket.emit('peer-type', 'app')
+})
+
 let peer
 socket.on('peer-connect', () => {
   peer = new Peer({wrtc: wrtc})

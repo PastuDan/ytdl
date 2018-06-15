@@ -6,7 +6,6 @@ const r = 90
 const c = Math.PI * r * 2
 
 export default function ProgressCircle ({percent, thumbnail, uiState}) {
-  console.log(percent)
   if (percent < 0) { percent = 0}
   if (percent > 100) { percent = 100}
 

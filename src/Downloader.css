@@ -1,0 +1,91 @@
+.Downloader-flip-container input {
+    font-size: 20px;
+    border: 2px solid #bbb;
+    width: 300px;
+    height: 40px;
+    border-radius: 4px;
+    outline: none;
+    color: #353535;
+    padding: 40px;
+    margin: 56px auto 0 auto;
+    display: block;
+}
+
+.Downloader-flip-container:not(:first-of-type) input {
+    opacity: 0;
+    animation: 0.6s input-fade-in;
+    animation-fill-mode: forwards;
+    animation-delay: 0.6s;
+}
+
+@keyframes input-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.Downloader-flip-container {
+    position: relative;
+    perspective: 1000px;
+    margin-bottom: 10px;
+}
+
+.Downloader-flip-container,
+.Downloader-flip-container .front,
+.Downloader-flip-container .back {
+    width: 100%;
+    height: 200px;
+}
+
+.Downloader-flip-container .front {
+    z-index: 2;
+}
+
+.Downloader-flip-container .back {
+    transform: rotateY(180deg);
+    display: flex;
+    justify-content: flex-start;
+}
+
+.Downloader-flip-container .front,
+.Downloader-flip-container .back {
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.Downloader-flip-container .back {
+    transform: rotateX(180deg);
+}
+
+.Downloader-flip-container .flipper {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+    transform-origin: 100% 100px; /* half of height */
+}
+
+.Downloader-flip-container.progress .flipper {
+    transform: rotateX(-180deg);
+}
+
+.Downloader-progress {
+    flex: 0 1;
+}
+
+.Downloader-video-metadata {
+    flex: 1 0;
+    padding: 0 20px;
+}
+
+.Downloader-video-metadata-description {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    height: 57px;
+}
