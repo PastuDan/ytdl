@@ -10,12 +10,13 @@ socket.on('connect', function (data) {
   socket.emit('peer-type', 'app')
 })
 
+//TODO keep a list of peers so multiple videos can be downloaded at once
 let peer
-socket.on('peer-connect', () => {
-  peer = new Peer({wrtc: wrtc})
-  peer.on('signal', function (data) {
+socket.on('peer-connect', downloadId => {
+  peer = new Peer({wrtc})
+  peer.on('signal', function (signal) {
     // when we have our own ICE data, give it to the remote peer via the signaling server
-    socket.emit('signal', data)
+    socket.emit('signal', {downloadId, signal})
   })
 
   peer.on('connect', () => {
@@ -28,8 +29,8 @@ socket.on('peer-connect', () => {
   })
 })
 
-socket.on('signal', data => {
-  peer.signal(data)
+socket.on('signal', ({signal}) => {
+  peer.signal(signal)
 })
 
 function downloadVideo (url) {
@@ -64,4 +65,6 @@ function downloadVideo (url) {
 
   video.pipe(peer)
   // video.pipe(fs.createWriteStream('myvideo.mp4'))
+
+  //TODO handle error events from piping peer
 }

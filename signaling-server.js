@@ -5,16 +5,38 @@ const io = require('socket.io').listen(http)
 const webPeers = {}
 const appPeers = {}
 const authedPeers = {}
+const downloads = {}
 
 io.on('connection', function (socket) {
-  socket.on('signal', function (message) {
-    // TODO find the peer with matching downloadId
-    socket.broadcast.emit('signal', message)
+  socket.on('signal', function ({downloadId, signal}) {
+    if (!downloadId) {
+      return
+    }
+
+    const peerPair = downloads[downloadId]
+    if (!peerPair) {
+      return
+    }
+
+    // Send the signal to the other side
+    const side = appPeers.hasOwnProperty(socket.id) ? 'web' : 'app'
+    peerPair[side].emit('signal', {downloadId, signal})
   })
 
-  socket.on('peer-connect', function (urlHash) {
-    // TODO grab a non-busy peer, keep a list of peer pairs keyed off downloadId
-    socket.broadcast.emit('peer-connect')
+  socket.on('peer-connect', function (downloadId) {
+    // TODO grab a non-busy peer
+    const peerIds = Object.keys(appPeers)
+    const randomAppPeer = appPeers[peerIds[peerIds.length * Math.random() << 0]]
+
+    if (!randomAppPeer) {
+      return
+    }
+
+    randomAppPeer.emit('peer-connect', downloadId)
+    downloads[downloadId] = {
+      web: socket,
+      app: randomAppPeer
+    }
   })
 
   socket.on('download-success', function ({side}) {
@@ -25,36 +47,40 @@ io.on('connection', function (socket) {
   socket.on('peer-type', function (data) {
     switch (data) {
       case 'web':
-        console.log('web', socket.id)
         webPeers[socket.id] = socket
         break
       case 'app':
-        console.log('app', socket.id)
         appPeers[socket.id] = socket
         break
       default:
         socket.disconnect()
     }
 
-    const app = Object.keys(appPeers).length
-    const web = Object.keys(webPeers).length
-    const authed = Object.keys(authedPeers).length
-    Object.entries(authedPeers).forEach(([id, peer]) => {
-      peer.send({web, app, authed})
-    })
+    broadcastStats()
   })
 
   socket.on('auth', function (auth) {
-    if (auth === process.env.REACT_APP_YTDL_AUTH) {
-      authedPeers[socket.id] = socket
+    if (auth !== process.env.REACT_APP_YTDL_AUTH) {
+      return
     }
+
+    authedPeers[socket.id] = socket
+    broadcastStats()
   })
 
-  socket.on('disconnect', function (reason) {
+  socket.on('disconnect', function () {
     delete webPeers[socket.id]
     delete appPeers[socket.id]
     delete authedPeers[socket.id]
 
-    console.log(reason)
+    broadcastStats()
   })
 })
+
+function broadcastStats () {
+  const app = Object.keys(appPeers).length
+  const web = Object.keys(webPeers).length
+  Object.entries(authedPeers).forEach(([id, peer]) => {
+    peer.emit('stats', {web, app})
+  })
+}

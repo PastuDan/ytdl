@@ -10,19 +10,19 @@ const parts = []
 
 class Downloader extends Component {
   static propTypes = {
-    socket:          PropTypes.object,
+    socket: PropTypes.object,
     downloadStarted: PropTypes.func,
   }
 
   state = {
-    connected:       false, // TODO remove or show indicator somewhere
-    uiState:         'initial',
-    size:            0,
+    connected: false, // TODO remove or show indicator somewhere
+    uiState: 'initial',
+    size: 0,
     bytesDownloaded: 0,
-    thumbnail:       null,
-    title:           'Loading details...',
-    description:     '',
-    peerId:          null
+    thumbnail: null,
+    title: 'Loading details...',
+    description: '',
+    peerId: null
   }
 
   connectToPeer = () => {
@@ -38,7 +38,9 @@ class Downloader extends Component {
     })
 
     socket.on('signal', (data) => {
+        // console.log('signal', data)
       if (data.downloadId !== downloadId) {
+        console.log('no download id with signal', data)
         return
       }
 
@@ -46,6 +48,7 @@ class Downloader extends Component {
     })
 
     peer.on('connect', () => {
+      console.log('connect')
       this.setState({connected: true})
       peer.send(this.searchInput.value)
     })
@@ -83,7 +86,6 @@ class Downloader extends Component {
     this.setState({uiState: 'progress'})
     this.connectToPeer()
     this.props.downloadStarted()
-    console.log('download start')
   }
 
   componentDidMount = () => {
@@ -102,7 +104,7 @@ class Downloader extends Component {
         </div>
         <div className="back">
           <ProgressCircle
-            className="Downloader-progress"
+            className={`Downloader-progress ${this.state.connected ? 'connected' : 'disconnected'}`}
             uiState={this.state.uiState}
             percent={this.state.size ? 100 * this.state.bytesDownloaded / this.state.size : 0}
             thumbnail={this.state.thumbnail}/>

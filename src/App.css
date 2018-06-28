@@ -32,6 +32,16 @@
     cursor: pointer;
 }
 
+.App-stats {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    border: 1px solid #f1f1f1;
+    background: #fbfbfb;
+    padding: 20px;
+    border-radius: 4px;
+}
+
 .App-options:hover {
     background: #ededed;
     color: #383838

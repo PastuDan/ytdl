@@ -34,7 +34,11 @@
     text-shadow: 0 0 0.5em black;
     text-align: center;
     color: white;
-    background-color: #353535;
+    background-color: #d42126;
     background-size: 180%;
     background-position: center;
+}
+
+.connected .ProgressCircle-percent {
+    background-color: #353535;
 }

@@ -8,6 +8,7 @@ import logo from './logo.png'
 const wsUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_SOCKET_URL : ''
 const socket = io(wsUrl)
 const remaining = getLocalStorage('remaining', 10)
+const auth = getLocalStorage('auth', null)
 
 socket.on('connect', function () {
   socket.emit('peer-type', 'web')
@@ -34,10 +35,10 @@ class App extends Component {
       this.setState({remaining})
     })
 
-    if (process.env.REACT_APP_YTDL_AUTH) {
-      socket.emit('auth', process.env.REACT_APP_YTDL_AUTH)
+    if (auth) {
+      socket.emit('auth', auth)
       socket.on('stats', stats => {
-        this.setState(stats)
+        this.setState({stats})
       })
     }
   }
@@ -59,15 +60,21 @@ class App extends Component {
             🎥 &middot; 1080p &middot; mp4 &nbsp; ⚙
           </div>
         </div>
-        {this.state.stats ? <div>
-          App: {this.state.stats.app} |
-          Web: {this.state.stats.web} |
-          Ratio: {this.state.stats.app / (this.state.stats.app + this.state.stats.web)}
-        </div> : null}
       </header>
       <section>
         {downloaders}
       </section>
+      {this.state.stats ? <ul className="App-stats">
+        <li>App: {this.state.stats.app}</li>
+        <li>App Busy: {this.state.stats.appBusy}</li>
+        <li>Web: {this.state.stats.web}</li>
+        <li>Web Busy: {this.state.stats.webBusy}</li>
+        <li></li>
+        <li>Total: {this.state.stats.app + this.state.stats.web}</li>
+        <li>
+          App/Web Ratio: {((this.state.stats.app / (this.state.stats.app + this.state.stats.web)) * 100).toFixed()}%
+        </li>
+      </ul> : null}
     </div>
   }
 }

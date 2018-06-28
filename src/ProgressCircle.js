@@ -5,13 +5,13 @@ import './ProgressCircle.css'
 const r = 90
 const c = Math.PI * r * 2
 
-export default function ProgressCircle ({percent, thumbnail, uiState}) {
+export default function ProgressCircle ({percent, thumbnail, uiState, className}) {
   if (percent < 0) { percent = 0}
   if (percent > 100) { percent = 100}
 
   const strokeDashoffset = (100 - percent) / 100 * c
 
-  return <div className={`ProgressCircle-container ${uiState}`}>
+  return <div className={`ProgressCircle-container ${uiState} ${className}`}>
     <div className="ProgressCircle-percent" style={{backgroundImage: `url(${thumbnail})`}}>
       {percent.toFixed(1)}%
     </div>
