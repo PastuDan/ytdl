@@ -19,3 +19,5 @@ You'll need to start 3 processes to see a successful download. In this case, api
 `nodemon api.js`
 
 `nodemon signaling-server.js`
+
+To test a download, try pasting https://www.youtube.com/watch?v=nr5Pj6GQL2o into the URL box.
