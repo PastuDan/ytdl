@@ -13,8 +13,7 @@ There are plenty of companies who operate a similar paid service, even located w
 
 # Development
 You'll need to start 3 processes to see a successful download. In this case, api.js acts as an electron peer since we don't any electron code yet.
+
 `yarn start`
-
 `nodemon api.js`
-
 `nodemon signaling-server.js`
