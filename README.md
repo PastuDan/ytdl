@@ -21,3 +21,44 @@ You'll need to start 3 processes to see a successful download. In this case, api
 `nodemon signaling-server.js`
 
 To test a download, try pasting https://www.youtube.com/watch?v=nr5Pj6GQL2o into the URL box.
+
+# Example flow
+```
++----------+                      +----------------+            +-------------+
+|Web Client|                      |Signaling Server|            |Electron Peer|
++----+-----+                      +--------+-------+            +------+------+
+     |                                     |                           |
+     |                                     |   I'm online, as 1.2.3.4  |
+     |                                     <---------------------------+
+     |                                     |                           |
+     |                                     |                           |
+     |                                     |                           |
+     |                                     |                           |
+     |                                     |                           |
+     |                                     |                           |
+     |                                     |                           |
+     |                                     |                           |
+     |                                     |                           |
+     |   Would like to download a video    |                           |
+     +------------------------------------^>                           |
+     |                                     |                           |
+     |       Ok, talk to 1.2.3.4           |                           |
+     <-------------------------------------+                           |
+     |                                     |                           |
+     |                                     |                           |
+     |                                     +                           |
+     |                                                                 |
+     |          I'd like to download http://youtu.be/abc123            |
+     +----------------------------------------------------------------->
+     |                                                                 |
+     |                 Send Video Metadata                             |
+     <-----------------------------------------------------------------+
+     |                                                                 |
+     |                    Send Video File                              |
+     <-----------------------------------------------------------------+
+     |                                                                 |
+     |                                                                 |
+     +                                                                 +
+
+
+```
