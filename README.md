@@ -11,7 +11,7 @@ And voila, p2p download begins.
 ## Legality
 There are plenty of companies who operate a similar paid service, even located within the US. Still, it would be worth more thoroughly researching copyright law before accepting payments.
 
-# Development
+## Development
 You'll need to start 3 processes to see a successful download. In this case, api.js acts as an electron peer since we don't any electron code yet.
 
 `yarn start`
@@ -22,7 +22,7 @@ You'll need to start 3 processes to see a successful download. In this case, api
 
 To test a download, try pasting https://www.youtube.com/watch?v=nr5Pj6GQL2o into the URL box.
 
-# Example flow
+## Example flow
 ```
 +----------+                      +----------------+            +-------------+
 |Web Client|                      |Signaling Server|            |Electron Peer|
