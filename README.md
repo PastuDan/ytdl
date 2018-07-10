@@ -1,3 +1,17 @@
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+# YTDL / VideoSaver
+An free and ad-free web-based P2P YouTube downloader. https://videosaver.app
 
-...
+## Concept / Business model
+Youtube videos currently have to be downloaded with a desktop app because they require merging video and audo together in one file. So my idea is to have a swarm of peers: some electron users but mostly web users. The web users download 5 or so free videos per month before being asked to download the free electron app or pay (something like $5/mo). If they download the electron app, they become the users that serve videos to other people.
+
+When a web user comes to the site and wants a video, we an orchestration server to say "sure, here's an electron user you can talk directly to"
+
+And voila, p2p download begins.
+
+## Legality
+There are plenty of companies who operate a similar paid service, even located within the US. Still, it would be worth more thoroughly researching copyright law before accepting payments.
+
+# Development
+`yarn start`
+
+`nodemon api.js`
