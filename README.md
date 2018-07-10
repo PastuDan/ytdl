@@ -38,9 +38,9 @@ To test a download, try pasting https://www.youtube.com/watch?v=nr5Pj6GQL2o into
      |                                     |                           |
      |                                     |                           |
      |                                     |                           |
-     |                                     |                           |
+     |           (much later)              |                           |
      |   Would like to download a video    |                           |
-     +------------------------------------^>                           |
+     +------------------------------------->                           |
      |                                     |                           |
      |       Ok, talk to 1.2.3.4           |                           |
      <-------------------------------------+                           |
